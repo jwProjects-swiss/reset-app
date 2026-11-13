@@ -1,0 +1,196 @@
+@import '@fontsource-variable/bricolage-grotesque';
+@import '@fontsource-variable/figtree';
+@import 'tailwindcss';
+
+/*
+ * Gestaltung: Nachthimmel mit einer hellen, warmen Scheibe als einzigem lauten Element.
+ * Alles andere bleibt ruhig. Weitere Designs lassen sich später anlegen,
+ * indem diese Farbwerte unter einem [data-theme="..."]-Selektor überschrieben werden.
+ */
+@theme {
+  --color-bg: #0d1120;
+  --color-surface: #161b2e;
+  --color-raised: #1f2540;
+  --color-line: #2b3253;
+  --color-ink: #eef0fa;
+  --color-muted: #969dba;
+  --color-moon: #f6dcc6;
+  --color-dawn: #ffc49b;
+  --color-night: #1d1830;
+
+  --font-display: 'Bricolage Grotesque Variable', ui-rounded, system-ui, sans-serif;
+  --font-sans: 'Figtree Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  color-scheme: dark;
+  height: 100%;
+  /* Platz für Notch und Home-Balken, wenn die App als installierte App läuft */
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--color-bg);
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+#root {
+  height: 100%;
+}
+
+button {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-moon);
+  outline-offset: 3px;
+}
+
+/* Seitlicher Rand, der auch seitliche Systemleisten berücksichtigt */
+.gutter {
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+}
+
+/* ---------- Der RESET-Knopf ---------- */
+
+.disc {
+  background: radial-gradient(circle at 34% 28%, #fffaf3 0%, #f6dcc6 42%, #eab594 100%);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.25) inset,
+    0 -18px 40px rgb(160 90 60 / 0.28) inset,
+    0 0 70px rgb(255 196 155 / 0.32),
+    0 0 160px rgb(255 196 155 / 0.16);
+  animation: breathe 5.5s ease-in-out infinite;
+  transition: transform 0.25s var(--ease-soft);
+}
+
+.disc:active {
+  transform: scale(0.95);
+  animation-play-state: paused;
+}
+
+.halo {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 1px solid rgb(246 220 198 / 0.35);
+  animation: halo 5.5s ease-out infinite;
+  pointer-events: none;
+}
+
+.halo + .halo {
+  animation-delay: 2.75s;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    scale: 1;
+  }
+  50% {
+    scale: 1.045;
+  }
+}
+
+@keyframes halo {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+
+/* ---------- Übergänge ---------- */
+
+.fade-in {
+  animation: fade-in 0.3s ease-out both;
+}
+
+.rise-in {
+  animation: rise-in 0.55s var(--ease-soft) both;
+}
+
+.pop-in {
+  animation: pop-in 0.6s var(--ease-soft) both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.98);
+  }
+}
+
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  60% {
+    transform: scale(1.08);
+  }
+}
+
+.check-path {
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  animation: draw 0.5s 0.25s ease-out forwards;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.scroll-area {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.scroll-area::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .halo {
+    display: none;
+  }
+
+  .check-path {
+    stroke-dashoffset: 0;
+  }
+}
